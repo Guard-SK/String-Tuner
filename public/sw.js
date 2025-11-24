@@ -1,5 +1,13 @@
 const CACHE_NAME = 'string-tuner-cache-v1';
-const APP_SHELL = ['/', '/index.html'];
+const APP_SHELL = [
+  '/',
+  '/index.html',
+  '/string-tuner-icon-512.png',
+  '/favicon.svg',
+  '/manifest.json',
+  '/src/assets/main.css',
+  // add your built JS/CSS files here after build
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -28,6 +36,9 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
 
+  // Optional: don’t handle cross-origin requests
+  if (new URL(request.url).origin !== self.location.origin) return;
+
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
@@ -40,7 +51,13 @@ self.addEventListener('fetch', (event) => {
           });
           return response;
         })
-        .catch(() => caches.match('/index.html'));
+        .catch(() => {
+          // Offline fallback only for navigations
+          if (request.mode === 'navigate') {
+            return caches.match('/index.html');
+          }
+          return Promise.reject(new Error('Network error and no cache.'));
+        });
     }),
   );
 });
