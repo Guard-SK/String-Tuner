@@ -4,6 +4,8 @@ const APP_SHELL = [
   '/index.html',
   '/string-tuner-icon-512.png',
   '/favicon.svg',
+  '/index-BhcBdfK7.js',
+  '/index-DBLZckSu.css'
   // add your built JS/CSS files here after build
 ];
 
